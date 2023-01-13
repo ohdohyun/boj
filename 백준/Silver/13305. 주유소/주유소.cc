@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int price[100001], dstnc[100001];
+int price[100001], dstnc[100001], price_copy[100001];
 
 int main() {
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -18,17 +18,27 @@ int main() {
 
 	for (int i = 0; i < N; i++) {
 		cin >> price[i];
+		price_copy[i] = price[i];
 	}
 
-	long long sum_of_distance = 0, result = 0;
-	int fuel = 1000000001;
 
-	for (int i = 0; i < N; i++) {
-		if (price[i] < fuel) {
-			fuel = price[i];
+	sort(price_copy, price_copy + N);
+
+	int sum_of_distance = 0, result = 0, position = 0;
+	for (int i = N - 1; i >= 0; i--) {
+
+		if (price_copy[position] == price[i]) {
+			sum_of_distance += dstnc[i];
+			result += sum_of_distance * price[i];
+			position++;
+			sum_of_distance = 0;
 		}
-		result += static_cast<long long>(fuel) * dstnc[i];
-		
+		else {
+			sum_of_distance += dstnc[i];
+			if (i == 0) {
+				result += sum_of_distance * price[i];
+			}
+		}
 	}
 
 	cout << result;
